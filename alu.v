@@ -12,6 +12,7 @@ module alu(
   parameter OR  = 3'b011;
   parameter MUL = 3'b100;
   parameter SLL = 3'b101;
+  parameter NOP = 3'b111;
 
   always @ (*) begin
     case (aluOp)
