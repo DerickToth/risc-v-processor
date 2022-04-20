@@ -3,7 +3,7 @@ module alu(
 	input [31:0] operand2,
 	input [2:0]  aluOp,
 	output reg       aluZero,
-	output reg [7:0] aluResult
+	output reg [31:0] aluResult
 );
 
   parameter ADD = 3'b000;
@@ -12,7 +12,8 @@ module alu(
   parameter OR  = 3'b011;
   parameter MUL = 3'b100;
   parameter SLL = 3'b101;
-  parameter NOP = 3'b111;
+  parameter BNE = 3'b100;
+  parameter BEQ = 3'b101;
 
   always @ (*) begin
     case (aluOp)

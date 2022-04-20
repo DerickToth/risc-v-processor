@@ -2,13 +2,13 @@ module controlLogicGenerator(
   input [6:0] opcode,
   input [2:0] funct3,
   input [6:0] funct7,
-  output       branch,
-  output       memRead,
-  output 		memtoReg,
-  output [2:0] aluOp,
-  output       memWrite,
-  output       aluSrc,
-  output       regWrite
+  output reg      branch,
+  output reg      memRead,
+  output reg		memtoReg,
+  output reg [2:0] aluOp,
+  output reg      memWrite,
+  output reg      aluSrc,
+  output reg      regWrite
 );
 	
   //Must be in sync with alu opcode parameters
@@ -30,11 +30,11 @@ module controlLogicGenerator(
 				aluSrc 	= 1'b1;
 				regWrite = 1'b1;
 				case (funct3)
-					0: opcode = ADD;  // addi
-					3'b001: funct7 == 0 ? opcode = SLL : NOP; //slli
+					0: aluOp = ADD;  // addi
+					3'b001: aluOp = (funct7 == 0) ? SLL : NOP; //slli
 				endcase
 			end
-			7'b0110011: //sub, or, and, add, MUL
+			7'b0110011: begin //sub, or, and, add, MUL
 				branch 	= 0;
 				memRead 	= 0;
 				memWrite = 0;
@@ -42,33 +42,35 @@ module controlLogicGenerator(
 				aluSrc 	= 0;
 				regWrite = 1'b1;
 				case ({funct7,funct3})
-					8'b0000000000: opcode = ADD	//add
-					8'b0100000000: opcode = SUB	//sub
-					8'b0000000110: opcode = OR		// or
-					8'b0000000111: opcode = AND	// and
-					8'b0000001000: opcode = MUL	// mul
+					10'b0000000000: aluOp = ADD;	//add
+					10'b0100000000: aluOp = SUB;	//sub
+					10'b0000000110: aluOp = OR;	// or
+					10'b0000000111: aluOp = AND;	// and
+					10'b0000001000: aluOp = MUL;	// mul
 				endcase
-			7'b0000011: //lw
+			end
+			7'b0000011: begin //lw
 				branch 	= 0;
 				memRead 	= 1'b1;
 				memWrite = 0;
 				memtoReg = 1'b1;
 				aluSrc 	= 1'b1;
 				regWrite = 1'b1;
-				case (funct3):
-					3'b010: opcode = ADD
+				case (funct3)
+					3'b010: aluOp = ADD;
 				endcase
-			7'b0100011: //sw
+			end
+			7'b0100011: begin //sw
 				branch 	= 0;
 				memRead 	= 0;
 				memWrite = 1'b1;
 				memtoReg = 1'b1;
 				aluSrc 	= 0;
 				regWrite = 0;
-				case (funct3):
-					3'b010: opcode = ADD
+				case (funct3)
+					3'b010: aluOp = ADD;
 				endcase
-			default: //nop case
+			end
 		endcase
 	end
 
