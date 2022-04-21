@@ -12,13 +12,14 @@ module controlLogicGenerator(
 );
 	
   //Must be in sync with alu opcode parameters
-	parameter ADD = 3'b000;
-	parameter SUB = 3'b001;
-	parameter AND = 3'b010;
-	parameter OR  = 3'b011;
-	parameter MUL = 3'b100;
-	parameter SLL = 3'b101;
-	parameter NOP = 3'b111;
+  parameter ADD = 3'b000;
+  parameter SUB = 3'b001;
+  parameter AND = 3'b010;
+  parameter OR  = 3'b011;
+  parameter MUL = 3'b100;
+  parameter SLL = 3'b101;
+  parameter BNE = 3'b100;
+  parameter BEQ = 3'b101;
   
 	always @(*) begin
 		case (opcode)
@@ -70,6 +71,16 @@ module controlLogicGenerator(
 				case (funct3)
 					3'b010: aluOp = ADD;
 				endcase
+			end
+			7'b1111111: begin // halt
+				//Perform NOOP
+				branch 	= 0;
+				memRead 	= 0;
+				memWrite = 0;
+				memtoReg = 0;
+				aluSrc 	= 0;
+				regWrite = 0;
+				aluOp    = 0;
 			end
 		endcase
 	end

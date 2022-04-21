@@ -1,7 +1,7 @@
-module risc_processor(input clk50);
-	
-	wire clk_1;
-	wire clk_2;
+module risc_tb();
+
+	reg clk_1;
+	reg clk_2;
 	
 	wire [31:0] aluIn1, aluIn2, immVal, regOut1 ,regOut2, aluOut, memOut, regWriteBack, currInstruction;
 	wire aluZero, branch, memRead, memToReg, memWrite, aluSrc, regWrite;
@@ -26,7 +26,6 @@ module risc_processor(input clk50);
 	alu 			 			 ALU(aluIn1, aluIn2, aluOp, aluZero, aluOut);
 	//data_memory  			 DATA(aluOut[7:0], ~clk_2, regOut2, memRead, memWrite, memOut);
 	data_memory  			 DATA(aluOut[7:0], ~clk_2, regOut2, memRead, memWrite, memOut);
-	pll 			 			 PLL(clk50, 0, clk_1, clk_2);
 	controlLogicGenerator LOGGEN(opcode, funct3, funct7, branch, memRead, memToReg, aluOp, memWrite, aluSrc, regWrite);
 	immediateGenerator    IMMGEN(currInstruction, immVal);
 	registerFile			 REGFILE(readReg1, readReg2, writeReg, regWriteBack, regWrite, ~clk_1, regOut1, regOut2);
@@ -47,6 +46,18 @@ module risc_processor(input clk50);
 		if (opcode != 7'b1111111) begin
 			currPC <= currPC + 1;
 		end
+	end
+
+	initial begin
+		clk_1 = 0;
+		clk_2 = 0;
+	end
+	
+	always @(*) begin
+		#1;
+		clk_2 = ~clk_2;
+		#1;
+		clk_1 = ~clk_1;
 	end
 	
 endmodule

@@ -7,7 +7,7 @@ module immediateGenerator(
   parameter JALR_OPCODE      = 7'b1100111;
   parameter BNE_BEQ_OPCODE   = 7'b1100011;
   parameter ADDI_SLLI_OPCODE = 7'b0010011;
-  parameter SW_OPCODE        = 7'b0000011;
+  parameter SW_OPCODE        = 7'b0100011;
   parameter LW_OPCODE        = 7'b0000011;
 
   wire [6:0] opcode = instruction[6:0];

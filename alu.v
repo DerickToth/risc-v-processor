@@ -24,7 +24,7 @@ module alu(
       MUL: aluResult = operand1 * operand2;
       SLL: aluResult = operand1 << operand2;
     endcase
-    aluZero = aluResult == 0;
+    aluZero = (aluResult == 32'd0);
   end
 
 endmodule
